@@ -1,0 +1,62 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Loan Prediction</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <style>
+        body {
+            font-family: 'Inter', sans-serif;
+            background-image: url('img.png');
+            background-size: cover;
+            background-position: center;
+            background-repeat: no-repeat;
+            background-attachment: fixed;
+            background-color: #000; /* Fallback for dark image */
+        }
+    </style>
+</head>
+<body class="bg-black bg-opacity-70">
+    <div class="container mx-auto mt-16 max-w-lg bg-gray-900 bg-opacity-80 rounded-lg shadow-lg p-8 backdrop-blur-md">
+        <h1 class="text-3xl font-bold text-center text-gray-100">Loan Approval Prediction</h1>
+        <form id="loan-form" class="mt-8 space-y-4">
+            <div>
+                <label for="name" class="block text-sm font-medium text-gray-300">Name</label>
+                <input type="text" id="name" class="mt-1 block w-full p-2 bg-gray-800 border border-gray-600 text-gray-100 rounded-md shadow-sm focus:ring-indigo-500 focus:border-indigo-500" placeholder="Enter your name" required>
+            </div>
+            <div>
+                <label for="income" class="block text-sm font-medium text-gray-300">Income</label>
+                <input type="number" id="income" class="mt-1 block w-full p-2 bg-gray-800 border border-gray-600 text-gray-100 rounded-md shadow-sm focus:ring-indigo-500 focus:border-indigo-500" placeholder="Enter your income" required>
+            </div>
+            <div>
+                <label for="credit_score" class="block text-sm font-medium text-gray-300">Credit Score</label>
+                <input type="number" id="credit_score" class="mt-1 block w-full p-2 bg-gray-800 border border-gray-600 text-gray-100 rounded-md shadow-sm focus:ring-indigo-500 focus:border-indigo-500" placeholder="Enter your credit score" required>
+            </div>
+            <!-- Updated Button Style -->
+            <button type="submit" class="w-full bg-gradient-to-r from-purple-700 to-indigo-700 text-white p-3 rounded-lg hover:from-purple-500 hover:to-indigo-500 transition">Check Loan Approval</button>
+        </form>
+        <div id="result" class="result text-center mt-6 text-xl font-semibold text-gray-100"></div>
+    </div>
+
+    <script>
+        document.getElementById('loan-form').addEventListener('submit', async function(event) {
+            event.preventDefault();
+            const name = document.getElementById('name').value;
+            const income = document.getElementById('income').value;
+            const creditScore = document.getElementById('credit_score').value;
+
+            const response = await fetch('http://127.0.0.1:5000/predict', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json'
+                },
+                body: JSON.stringify({ income: parseInt(income), credit_score: parseInt(creditScore) })
+            });
+            
+            const data = await response.json();
+            document.getElementById('result').innerHTML = `Loan Status for ${name}: ${data.result}`;
+        });
+    </script>
+</body>
+</html>
